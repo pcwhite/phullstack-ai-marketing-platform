@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function TemplateLoading() {
+export default function SettingsLoading() {
   return (
-    <div>Template Loading...</div>
+    <div>Settings Loading...</div>
   )
 }
