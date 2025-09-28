@@ -1,0 +1,17 @@
+import Sidebar from "@/components/Sidebar";
+
+export default function DashboardLayout({
+    children, // will be a page or nested layout
+  }: {
+    children: React.ReactNode
+  }) {
+    return (
+      <div className='flex flex-col lg:flex-row min-h-screen bg-white'>
+        {/* Include shared UI here e.g. a header or sidebar */}
+        <Sidebar />
+        <main className="flex-1 p-4 sm:p-6 md:p-8 lg:p-6 pt-16 lg:pt-8 overflow-auto">
+          {children}
+          </main>
+      </div>
+    )
+  }
