@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils';
-import { ChevronRight, ChevronsLeft } from 'lucide-react';
-import { Button } from './ui/button';
-import React from 'react'
+import { cn } from "@/lib/utils";
+import { ChevronRight, ChevronsLeft } from "lucide-react";
+import { Button } from "./ui/button";
+import React from "react";
 
 interface SidebarToggleProps {
   isCollapsed: boolean;
@@ -10,20 +10,28 @@ interface SidebarToggleProps {
 
 function SidebarToggle({ isCollapsed, toggleSidebar }: SidebarToggleProps) {
   return (
-    <div className={cn(
-        "flex border-t border-gray-200",
+    <div
+      className={cn(
+        "hidden lg:flex border-t border-gray-200",
         isCollapsed ? "p-4 justify-center" : "p-4 justify-end"
-    )}>
-        <Button variant="ghost" onClick={toggleSidebar} 
+      )}
+    >
+      <Button
+        variant="ghost"
+        onClick={toggleSidebar}
         className={cn(
-            "text-gray-800 hover:text-main hover:bg-gray-200",
-            isCollapsed && "self-center"
+          "text-gray-800 hover:text-main hover:bg-gray-200",
+          isCollapsed && "self-center"
         )}
-        >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
-        </Button>
+      >
+        {isCollapsed ? (
+          <ChevronRight className="h-4 w-4" />
+        ) : (
+          <ChevronsLeft className="h-4 w-4" />
+        )}
+      </Button>
     </div>
-  )
+  );
 }
 
-export default SidebarToggle
+export default SidebarToggle;
