@@ -6,14 +6,14 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SidebarNav from "./SidebarNav";
 import SidebarToggle from "./SidebarToggle";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { SignInButton } from "@clerk/nextjs";
-import { UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import UserProfileSection from "./UserProfileSection";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const { isSignedIn } = useUser();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function Sidebar() {
         onClick={toggleSidebar}
         className={cn(
           "fixed top-4 left-4 z-50 bg-transparent hover:bg-gray-100/50 backdrop-blur-sm",
-          isOpen && "top-4 left-4"
+          "lg:hidden"
         )}
       >
         {renderMenuIcon()}
@@ -84,14 +84,8 @@ function Sidebar() {
           <SidebarNav isCollapsed={isCollapsed} />
         </div>
 
-        <div>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
+        {isSignedIn && <UserProfileSection isCollapsed={isCollapsed} />}
+
         <SidebarToggle
           isCollapsed={isCollapsed}
           toggleSidebar={toggleCollapsed}

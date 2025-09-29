@@ -51,7 +51,7 @@ export default function SidebarNav({ isCollapsed }: SidebarNavProps) {
           variant="ghost"
           asChild
           className={cn(
-            "w-full justify-start hover:text-main hover:bg-gray-200 flex items-center text-lg font-normal",
+            "w-full justify-start hover:text-main hover:bg-gray-200 flex items-center text-lg font-medium",
             isCollapsed && "lg:justify-center lg:p-2",
             item.isActive(pathname) && "text-main bg-gray-200"
           )}
