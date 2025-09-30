@@ -6,6 +6,11 @@ export const projectsTable = pgTable("projects", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
   .notNull()
+  .defaultNow()
   .$onUpdate(() => new Date()),
   userId: varchar("user_id", { length: 50 }).notNull(),
 });
+
+// Types
+export type InsertProject = typeof projectsTable.$inferInsert;
+export type Project = typeof projectsTable.$inferSelect;
