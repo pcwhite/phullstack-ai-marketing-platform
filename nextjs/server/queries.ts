@@ -22,3 +22,19 @@ export async function getProjectsForUser(): Promise<Project[]> {
 
     return await projects;
 }
+
+export async function getProject(projectId: string) {
+    // Figure out who the current user is
+    const { userId } = await auth();
+    // Verify the user exists
+    if (!userId) {
+        throw new Error("User not found");
+    }
+
+    const project = await db.query.projectsTable.findFirst({
+        where: (project, { eq, and }) =>
+        and(eq(project.id, projectId), eq(project.userId, userId)),
+    });
+
+    return project;
+}
