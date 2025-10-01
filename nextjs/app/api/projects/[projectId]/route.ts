@@ -47,3 +47,28 @@ export async function PATCH(
 
   return NextResponse.json(updatedProject[0]);
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { projectId: string } }
+) {
+  const { userId } = getAuth(request);
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const deletedProject = await db
+  .delete(projectsTable)
+  .where(
+    and(
+      eq(projectsTable.userId, userId),
+      eq(projectsTable.id, params.projectId)
+    )
+  )
+  .returning();
+
+  if (deletedProject.length === 0) {
+    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(deletedProject[0]);
+}

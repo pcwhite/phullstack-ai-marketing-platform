@@ -11,12 +11,12 @@ import toast from "react-hot-toast";
 
 interface ProjectDetailHeaderProps {
   project: Project;
-  setIsDeleting: Dispatch<SetStateAction<boolean>>;
+  setShowDeleteConfirmation: Dispatch<SetStateAction<boolean>>;
 }
 
 function ProjectDetailHeader({
   project,
-  setIsDeleting,
+  setShowDeleteConfirmation,
 }: ProjectDetailHeaderProps) {
   const [title, setTitle] = useState(project.title);
   const [isEditing, setIsEditing] = useState(false);
@@ -108,7 +108,7 @@ function ProjectDetailHeader({
             "h-8 w-8 sm:h-10 sm:w-10",
             "hover:text-red-600 hover:bg-red-50"
           )}
-          onClick={() => setIsDeleting(true)}
+          onClick={() => setShowDeleteConfirmation(true)}
         >
           <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
         </Button>
