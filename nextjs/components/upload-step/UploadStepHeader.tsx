@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { Button } from "../ui/button";
 
 function UploadStepHeader() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [uploading, setUploading] = useState(false);
   const [browserFiles, setBrowserFiles] = useState<File[]>([]);
 
