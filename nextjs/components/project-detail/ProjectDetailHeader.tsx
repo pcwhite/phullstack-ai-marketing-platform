@@ -20,6 +20,7 @@ function ProjectDetailHeader({
 }: ProjectDetailHeaderProps) {
   const [title, setTitle] = useState(project.title);
   const [isEditing, setIsEditing] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSaving, setIsSaving] = useState(false);
 
   const handleTitleSubmit = async () => {
