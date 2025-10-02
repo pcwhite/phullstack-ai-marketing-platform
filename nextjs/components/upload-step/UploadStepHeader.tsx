@@ -1,9 +1,14 @@
 import { Upload } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { Button } from "../ui/button";
+import { upload } from "@vercel/blob/client";
+import toast from "react-hot-toast";
 
-function UploadStepHeader() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface UploadStepHeaderProps {
+  projectId: string;
+}
+
+function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
   const [uploading, setUploading] = useState(false);
   const [browserFiles, setBrowserFiles] = useState<File[]>([]);
 
@@ -24,6 +29,66 @@ function UploadStepHeader() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setBrowserFiles(Array.from(e.target.files));
+    }
+  };
+
+  const getFileType = (file: File) => {
+    if (file.type.startsWith("video")) {
+      return "video";
+    }
+    if (file.type.startsWith("audio")) {
+      return "audio";
+    }
+    if (file.type === "text/plain") {
+      return "text";
+    }
+    if (file.type === "text/markdown") {
+      return "markdown";
+    }
+    return "other";
+  };
+
+  const handleUpload = async () => {
+    setUploading(true);
+
+    try {
+      // upload files to the server
+      const uploadPromises = browserFiles.map(async (file) => {
+        const fileData = {
+          projectId,
+          title: file.name,
+          fileType: getFileType(file),
+          mimeType: file.type,
+          size: file.size,
+          content: "",
+          tokenCount: 0,
+        };
+
+        const fileName = `${projectId}/${file.name}`;
+        const result = await upload(fileName, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          multipart: true,
+          clientPayload: JSON.stringify(fileData),
+        });
+
+        return result;
+      });
+
+      const uploadedResults = await Promise.all(uploadPromises);
+
+      toast.success(`Files uploaded ${uploadedResults.length} successfully`);
+      setBrowserFiles([]);
+      if (inputFileRef.current) {
+        inputFileRef.current.value = "";
+      }
+
+      // fetchFiles();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error uploading files. Please try again.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -63,7 +128,8 @@ function UploadStepHeader() {
               ))}
             </ul>
             <Button
-              variant="outline"
+              onClick={handleUpload}
+              disabled={uploading}
               className="mt-2 bg-main text-white rounded-3xl text-sm"
             >
               <Upload className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
