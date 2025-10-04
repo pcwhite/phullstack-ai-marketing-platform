@@ -60,8 +60,6 @@ function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
           fileType: getFileType(file),
           mimeType: file.type,
           size: file.size,
-          content: "",
-          tokenCount: 0,
         };
 
         const fileName = `${projectId}/${file.name}`;
@@ -77,7 +75,7 @@ function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
 
       const uploadedResults = await Promise.all(uploadPromises);
 
-      toast.success(`Files uploaded ${uploadedResults.length} successfully`);
+      toast.success(`Successfully uploaded ${uploadedResults.length} files`);
       setBrowserFiles([]);
       if (inputFileRef.current) {
         inputFileRef.current.value = "";
@@ -85,7 +83,7 @@ function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
 
       // fetchFiles();
     } catch (error) {
-      console.error(error);
+      console.error("Error uploading files due to: ", error);
       toast.error("Error uploading files. Please try again.");
     } finally {
       setUploading(false);
