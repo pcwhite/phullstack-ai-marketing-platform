@@ -110,7 +110,7 @@ function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
             <input
               type="file"
               multiple
-              accept=".mp4,.txt,.md,video/*,audio/*,text/plain,text/markdown"
+              accept="*.mp4,*.txt,*.md,video/*,audio/*,text/plain,text/markdown"
               className="hidden"
               onChange={handleFileChange}
               ref={inputFileRef}
