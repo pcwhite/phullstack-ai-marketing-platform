@@ -33,10 +33,10 @@ function UploadStepHeader({ projectId }: UploadStepHeaderProps) {
   };
 
   const getFileType = (file: File) => {
-    if (file.type.startsWith("video")) {
+    if (file.type.startsWith("video/")) {
       return "video";
     }
-    if (file.type.startsWith("audio")) {
+    if (file.type.startsWith("audio/")) {
       return "audio";
     }
     if (file.type === "text/plain") {
