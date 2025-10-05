@@ -1,22 +1,47 @@
 import { Asset } from "@/server/db/schema";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { AudioLines, Video, File, FileMinus, Dot, Trash } from "lucide-react";
 import { Button } from "../ui/button";
+import { formatFileTokens } from "@/utils/formatFileTokens";
+import { cn } from "@/lib/utils";
+import { MAX_TOKENS_ASSETS } from "@/lib/constants";
 
 interface UploadStepBodyProps {
   setDeleteAssetId: React.Dispatch<React.SetStateAction<string | null>>;
   isLoading: boolean;
   uploadedAssets: Asset[];
+  assetJobStatus: Record<string, string>;
 }
 
 function UploadStepBody({
   setDeleteAssetId,
   isLoading,
   uploadedAssets,
+  assetJobStatus,
 }: UploadStepBodyProps) {
-  // TODO: Fetch all asset processing jobs for the project - polling
+  const [isExceeded, setIsExceeded] = useState(false);
+  const [usagePercentage, setUsagePercentage] = useState(0);
+  const [formattedPercentage, setFormattedPercentage] = useState(0);
   // TODO: Show skeleton loading while fetching assets and asset processing jobs
+
+  useEffect(() => {
+    const calculatedTotalTokens = uploadedAssets.reduce(
+      (sum, file) => sum + (file.tokenCount || 0),
+      0
+    );
+    const calculatedUsagePercentage = Math.min(
+      (calculatedTotalTokens / MAX_TOKENS_ASSETS) * 100,
+      100
+    );
+    setUsagePercentage(calculatedUsagePercentage);
+
+    const calculatedFormattedPercentage = Math.round(calculatedUsagePercentage);
+    setFormattedPercentage(calculatedFormattedPercentage);
+
+    const exceeded = calculatedUsagePercentage > MAX_TOKENS_ASSETS;
+    setIsExceeded(exceeded);
+  }, [uploadedAssets]);
 
   if (isLoading) {
     return (
@@ -34,7 +59,27 @@ function UploadStepBody({
         <h3 className="font-bold text-lg mb-2 sm:mb-0 md:text-2xl lg:text-2xl">
           Uploaded Files:
         </h3>
-        <div>Progress bar</div>
+        <div className="w-full sm:max-w-xs space-y-2">
+          <p
+            className={cn(
+              "text-sm text-center sm:text-right truncate",
+              isExceeded ? "text-red-500 font-medium" : "text-gray-600"
+            )}
+          >
+            {isExceeded
+              ? "Content Limit Exceeded. Please delete assets"
+              : `${formattedPercentage}% of ${MAX_TOKENS_ASSETS.toLocaleString()} tokens used`}
+          </p>
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+            <div
+              className={cn(
+                "h-2.5 rounded-full",
+                isExceeded ? "bg-red-500" : "bg-main"
+              )}
+              style={{ width: `${usagePercentage}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
       <ul className="space-y-1">
         {uploadedAssets.map((asset) => (
@@ -50,10 +95,12 @@ function UploadStepBody({
                 </span>
                 <div className="flex flex-col sm:flex-row sm:items-center text-gray-500 w-full min-w-0">
                   <p className="text-xs sm:text-sm truncate">
-                    Job Status: Unknown
+                    Job Status: {assetJobStatus[asset.id] || "Unknown"}
                   </p>
                   <Dot className="hidden sm:flex flex-shrink-0" />
-                  <p className="text-xs sm:text-sm truncate">Tokens: ???</p>
+                  <p className="text-xs sm:text-sm truncate">
+                    Tokens: {formatFileTokens(asset.tokenCount || 0)}
+                  </p>
                 </div>
               </div>
             </span>

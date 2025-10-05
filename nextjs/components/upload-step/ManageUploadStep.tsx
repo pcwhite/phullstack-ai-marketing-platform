@@ -1,15 +1,16 @@
+"use client";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UploadStepHeader from "./UploadStepHeader";
 import UploadStepBody from "./UploadStepBody";
 import ConfirmationModal from "../ConfirmationModal";
 import axios from "axios";
-import { toast } from "react-hot-toast";
-import { Asset } from "@/server/db/schema";
+import toast from "react-hot-toast";
+import { Asset, AssetProcessingJob } from "@/server/db/schema";
 import { upload } from "@vercel/blob/client";
 
 interface ManageUploadStepProps {
   projectId: string;
-  isLoading: boolean;
 }
 
 function ManageUploadStep({ projectId }: ManageUploadStepProps) {
@@ -19,11 +20,17 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
   const [uploadedAssets, setUploadedAssets] = useState<Asset[]>([]);
   const [uploading, setUploading] = useState(false);
   const [browserFiles, setBrowserFiles] = useState<File[]>([]);
+  const [assetJobStatus, setAssetJobStatus] = useState<Record<string, string>>(
+    {}
+  );
 
+  const prevAssetJobStatusRef = useRef<Record<string, string>>({});
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const fetchAssets = useCallback(async () => {
-    setIsLoading(true);
+    if (uploadedAssets.length === 0) {
+      setIsLoading(true);
+    }
     try {
       const response = await axios.get<Asset[]>(
         `/api/projects/${projectId}/assets`
@@ -35,11 +42,54 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [projectId]);
+  }, [projectId, uploadedAssets.length]);
 
   useEffect(() => {
     fetchAssets();
   }, [fetchAssets]);
+
+  const fetchAssetProcessingJobs = useCallback(async () => {
+    try {
+      const response = await axios.get<AssetProcessingJob[]>(
+        `/api/projects/${projectId}/asset-processing-jobs`
+      );
+
+      const newAssetJobStatus: Record<string, string> = {};
+      response.data.forEach((job) => {
+        newAssetJobStatus[job.assetId] = job.status;
+      });
+
+      setAssetJobStatus(newAssetJobStatus);
+
+      const prevAssetJobStatus = prevAssetJobStatusRef.current;
+      const isAnyStatusChangedToCompleted = response.data.some((job) => {
+        const prevStatus = prevAssetJobStatus[job.assetId];
+        const newStatus = job.status;
+        return prevStatus !== "completed" && newStatus === "completed";
+      });
+
+      // Update the previous statuses reference
+      prevAssetJobStatusRef.current = newAssetJobStatus;
+
+      if (isAnyStatusChangedToCompleted) {
+        console.log("Fetching files after status change to completed");
+        toast.success("Asset processing completed");
+        await fetchAssets();
+      }
+    } catch (error) {
+      console.error("Error fetching asset processing jobs", error);
+    }
+  }, [fetchAssets, projectId]);
+
+  useEffect(() => {
+    fetchAssetProcessingJobs();
+    const fetchAssetProcessingJobsInterval = setInterval(
+      fetchAssetProcessingJobs,
+      1000
+    );
+
+    return () => clearInterval(fetchAssetProcessingJobsInterval);
+  }, [fetchAssetProcessingJobs]);
 
   const getFileType = (file: File) => {
     if (file.type.startsWith("video/")) {
@@ -129,6 +179,7 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
         setDeleteAssetId={setDeleteAssetId}
         isLoading={isLoading}
         uploadedAssets={uploadedAssets}
+        assetJobStatus={assetJobStatus}
       />
       <ConfirmationModal
         isOpen={!!deleteAssetId}
