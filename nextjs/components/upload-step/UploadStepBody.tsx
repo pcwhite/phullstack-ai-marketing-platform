@@ -1,35 +1,20 @@
 import { Asset } from "@/server/db/schema";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Skeleton } from "../ui/skeleton";
 import { AudioLines, Video, File, FileMinus, Dot, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface UploadStepBodyProps {
-  projectId: string;
+  setDeleteAssetId: React.Dispatch<React.SetStateAction<string | null>>;
+  isLoading: boolean;
+  uploadedAssets: Asset[];
 }
 
-function UploadStepBody({ projectId }: UploadStepBodyProps) {
-  const [uploadedAssets, setUploadedAssets] = useState<Asset[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  // TODO: Fetch all assets for the project
-  useEffect(() => {
-    setIsLoading(true);
-    const fetchAssets = async () => {
-      try {
-        const response = await axios.get<Asset[]>(
-          `/api/projects/${projectId}/assets`
-        );
-        setUploadedAssets(response.data);
-        console.log("Uploaded assets", response.data);
-      } catch (error) {
-        console.error("Error fetching assets", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAssets();
-  }, [projectId]);
+function UploadStepBody({
+  setDeleteAssetId,
+  isLoading,
+  uploadedAssets,
+}: UploadStepBodyProps) {
   // TODO: Fetch all asset processing jobs for the project - polling
   // TODO: Show skeleton loading while fetching assets and asset processing jobs
 
@@ -72,7 +57,10 @@ function UploadStepBody({ projectId }: UploadStepBodyProps) {
                 </div>
               </div>
             </span>
-            <Button className="text-red-500 bg-transparent shadow-none hover:bg-transparent flex-shrink-0 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-100">
+            <Button
+              onClick={() => setDeleteAssetId(asset.id)}
+              className="text-red-500 bg-transparent shadow-none hover:bg-transparent flex-shrink-0 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-100"
+            >
               <Trash className="h-5 w-5" />
               <span className="hidden lg:inline ml-2">Delete</span>
             </Button>

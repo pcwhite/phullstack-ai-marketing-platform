@@ -16,7 +16,7 @@ interface ConfirmationModalProps {
   title: string;
   message: string;
   isLoading: boolean;
-  onCancel: () => void;
+  onClose: () => void;
   onConfirm: () => void;
 }
 function ConfirmationModal({
@@ -24,7 +24,7 @@ function ConfirmationModal({
   title,
   message,
   isLoading,
-  onCancel,
+  onClose,
   onConfirm,
 }: ConfirmationModalProps) {
   return (
@@ -40,7 +40,7 @@ function ConfirmationModal({
         </AlertDialogDescription>
         <AlertDialogFooter className="flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
           <AlertDialogCancel
-            onClick={onCancel}
+            onClick={onClose}
             className="w-full sm:w-auto border-main text-main bg-white hover:bg-main/10"
             disabled={isLoading}
           >

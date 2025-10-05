@@ -89,7 +89,7 @@ function ProjectDetailView({ project }: ProjectDetailViewProps) {
         title="Delete Project"
         message="Are you sure you want to delete this project?"
         isLoading={isDeleting}
-        onCancel={() => setShowDeleteConfirmation(false)}
+        onClose={() => setShowDeleteConfirmation(false)}
         onConfirm={handleDelete}
       />
     </div>
