@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import UploadStepHeader from "./UploadStepHeader";
 import UploadStepBody from "./UploadStepBody";
 import ConfirmationModal from "../ConfirmationModal";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Asset } from "@/server/db/schema";
+import { upload } from "@vercel/blob/client";
 
 interface ManageUploadStepProps {
   projectId: string;
@@ -16,6 +17,10 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedAssets, setUploadedAssets] = useState<Asset[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [browserFiles, setBrowserFiles] = useState<File[]>([]);
+
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const fetchAssets = useCallback(async () => {
     setIsLoading(true);
@@ -36,6 +41,65 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
     fetchAssets();
   }, [fetchAssets]);
 
+  const getFileType = (file: File) => {
+    if (file.type.startsWith("video/")) {
+      return "video";
+    }
+    if (file.type.startsWith("audio/")) {
+      return "audio";
+    }
+    if (file.type === "text/plain") {
+      return "text";
+    }
+    if (file.type === "text/markdown") {
+      return "markdown";
+    }
+    return "other";
+  };
+
+  const handleUpload = async () => {
+    setUploading(true);
+
+    try {
+      // upload files to the server
+      const uploadPromises = browserFiles.map(async (file) => {
+        const fileData = {
+          projectId,
+          title: file.name,
+          fileType: getFileType(file),
+          mimeType: file.type,
+          size: file.size,
+        };
+
+        const fileName = `${projectId}/${file.name}`;
+        const result = await upload(fileName, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          multipart: true,
+          clientPayload: JSON.stringify(fileData),
+        });
+
+        return result;
+      });
+
+      const uploadedResults = await Promise.all(uploadPromises);
+
+      toast.success(`Successfully uploaded ${uploadedResults.length} files`);
+      setBrowserFiles([]);
+      if (inputFileRef.current) {
+        inputFileRef.current.value = "";
+      }
+
+      // fetchFiles();
+      fetchAssets();
+    } catch (error) {
+      console.error("Error uploading files due to: ", error);
+      toast.error("Error uploading files. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -53,7 +117,13 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
   };
   return (
     <div>
-      <UploadStepHeader projectId={projectId} />
+      <UploadStepHeader
+        setBrowserFiles={setBrowserFiles}
+        inputFileRef={inputFileRef}
+        browserFiles={browserFiles}
+        handleUpload={handleUpload}
+        uploading={uploading}
+      />
       <UploadStepBody
         setDeleteAssetId={setDeleteAssetId}
         isLoading={isLoading}
