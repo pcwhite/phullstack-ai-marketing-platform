@@ -84,14 +84,15 @@ function ManageUploadStep({ projectId }: ManageUploadStepProps) {
 
       const uploadedResults = await Promise.all(uploadPromises);
 
+      // fetch assets
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await fetchAssets();
+
       toast.success(`Successfully uploaded ${uploadedResults.length} files`);
       setBrowserFiles([]);
       if (inputFileRef.current) {
         inputFileRef.current.value = "";
       }
-
-      // fetchFiles();
-      fetchAssets();
     } catch (error) {
       console.error("Error uploading files due to: ", error);
       toast.error("Error uploading files. Please try again.");
