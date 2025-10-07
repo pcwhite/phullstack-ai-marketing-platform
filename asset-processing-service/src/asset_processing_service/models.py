@@ -1,0 +1,32 @@
+from datetime import datetime
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+
+
+class AssetProcessingJob(BaseModel):
+    id: str
+    assetId: str
+    status: Literal[
+        "created", "in_progress", "completed", "failed", "max_attempts_exceeded"
+    ]
+    attempts: int
+    createdAt: datetime
+    updatedAt: datetime
+    lastHeartBeat: datetime
+    errorMessage: Optional[str] = None
+
+
+class Asset(BaseModel):
+    id: str
+    projectId: str
+    title: str
+    fileName: str
+    fileUrl: str
+    fileType: Literal["text", "image", "audio", "video"]
+    mimeType: str
+    size: int
+    content: str
+    tokenCount: int
+    createdAt: datetime
+    updatedAt: datetime
