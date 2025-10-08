@@ -49,7 +49,7 @@ async def job_fetcher(job_queue: asyncio.Queue, jobs_pending_or_in_progress: set
                         )
 
                     elif job.id not in jobs_pending_or_in_progress:
-                        logger.info("Adding job to queue: ", job.id)
+                        logger.info(f"Adding job to queue: {job.id}")
                         jobs_pending_or_in_progress.add(job.id)
                         await job_queue.put(job)
 
