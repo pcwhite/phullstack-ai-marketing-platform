@@ -1,7 +1,7 @@
 # Use an official Python runtime as a parent image
 FROM python:3.13-slim
 
-# TODO: INSTALL VIDEO EDITING TOOLS - whisper, etc.
+RUN apt-get update && apt-get install -y ffmpeg 
 
 
 # Install Poetry
