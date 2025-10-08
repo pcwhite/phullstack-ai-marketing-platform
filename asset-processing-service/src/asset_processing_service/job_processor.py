@@ -10,10 +10,11 @@ from api_client import (
     update_asset_content,
 )
 from media_processor import split_audio_file, extract_audio_and_split, transcribe_chunks
+from logger import logger
 
 
 async def process_job(job: AssetProcessingJob) -> None:
-    print(f"Processing job {job.id}")
+    logger.info(f"Processing job {job.id}")
 
     heartbeat_task = asyncio.create_task(heartbeat(job.id))
 
@@ -27,14 +28,14 @@ async def process_job(job: AssetProcessingJob) -> None:
 
         file_buffer = await fetch_asset_file(asset.fileUrl)
 
-        content_type = "images"
+        content_type = asset.fileType
         content = file_buffer
 
         if content_type in ["text", "markdown"]:
-            print(f"Processing text/markdown file for job {asset.fileName}")
+            logger.info(f"Processing text/markdown file for job {asset.fileName}")
             content = file_buffer.decode("utf-8")
         elif content_type == "audio":
-            print(f"Processing audio file...")
+            logger.info(f"Processing audio file...")
             chunks = await split_audio_file(
                 file_buffer,
                 config.MAX_CHUNK_SIZE_BYTES,
@@ -43,7 +44,7 @@ async def process_job(job: AssetProcessingJob) -> None:
             transcribed_chunks = await transcribe_chunks(chunks)
             content = "\n\n".join(transcribed_chunks)
         elif content_type == "video":
-            print(f"Processing video file...")
+            logger.info(f"Processing video file...")
             chunks = await extract_audio_and_split(
                 file_buffer,
                 config.MAX_CHUNK_SIZE_BYTES,
@@ -61,7 +62,7 @@ async def process_job(job: AssetProcessingJob) -> None:
         await update_job_details(job.id, {"status": "completed"})
 
     except Exception as e:
-        print(f"Error updating job status to in_progress for job {job.id}: {e}")
+        logger.error(f"Error updating job status to in_progress for job {job.id}: {e}")
         error_message = str(e)
         await update_job_details(
             job.id,
@@ -86,8 +87,8 @@ async def heartbeat(job_id: str) -> None:
             await update_job_heartbeat(job_id)
             await asyncio.sleep(config.HEARTBEAT_INTERVAL_SECONDS)
         except asyncio.CancelledError:
-            print(f"Heartbeat for job {job_id} cancelled")
+            logger.info(f"Heartbeat for job {job_id} cancelled")
             break
         except Exception as e:
-            print(f"Error updating job heartbeat for job {job_id}: {e}")
+            logger.error(f"Error updating job heartbeat for job {job_id}: {e}")
             await asyncio.sleep(config.HEARTBEAT_INTERVAL_SECONDS)
