@@ -26,7 +26,7 @@ class Asset(BaseModel):
     fileType: Literal["text", "image", "audio", "video"]
     mimeType: str
     size: int
-    content: str
+    content: Optional[str]
     tokenCount: int
     createdAt: datetime
     updatedAt: datetime

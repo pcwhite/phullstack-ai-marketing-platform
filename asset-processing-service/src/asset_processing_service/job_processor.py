@@ -55,6 +55,7 @@ async def process_job(job: AssetProcessingJob) -> None:
         else:
             raise ValueError(f"Unsupported content type: {content_type}")
 
+        logger.info(f"Final content: {content}")
         # Update job content
         await update_asset_content(asset.id, content)
 
