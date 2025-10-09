@@ -21,7 +21,7 @@ async def process_job(job: AssetProcessingJob) -> None:
     try:
         await update_job_details(job.id, {"status": "in_progress"})
 
-        # TODO: Fetch asset associated with asset processing job
+        # Fetch asset associated with asset processing job
         asset = await fetch_asset(job.assetId)
         if asset is None:
             raise ValueError(f"Asset not found for asset processing job {job.id}")
