@@ -149,5 +149,3 @@ This project relies on several external services, which need to be configured vi
     ```
 
 Enjoy exploring the application!
-
-I've included sections for the project's purpose, features, a detailed tech stack, architecture, and setup instructions. This should give anyone who comes across your repository a great starting point. Let me know if you'd like any adjustments!
