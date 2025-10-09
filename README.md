@@ -78,8 +78,8 @@ Follow these instructions to get a local copy up and running for development and
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/fullstack-ai-marketing-platform.git
-    cd fullstack-ai-marketing-platform
+    git clone https://github.com/your-username/phullstack-ai-marketing-platform.git
+    cd phullstack-ai-marketing-platform
     ```
 
 2.  **Set up the Frontend (Next.js):**
