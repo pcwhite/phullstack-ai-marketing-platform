@@ -1,11 +1,10 @@
 import asyncio
 from datetime import datetime
-from job_processor import process_job
 from collections import defaultdict
-
-from api_client import fetch_jobs, update_job_details
-from config import config
-from logger import logger
+from asset_processing_service.job_processor import process_job
+from asset_processing_service.api_client import fetch_jobs, update_job_details
+from asset_processing_service.config import config
+from asset_processing_service.logger import logger
 
 
 async def job_fetcher(job_queue: asyncio.Queue, jobs_pending_or_in_progress: set):

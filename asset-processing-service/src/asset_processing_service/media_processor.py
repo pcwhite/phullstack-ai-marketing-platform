@@ -188,7 +188,7 @@ async def transcribe_chunks(chunks: List[dict]) -> List[str]:
             with open(temp_file_path, "rb") as audio_file:
                 # Call OpenAI's transcription API to use Whisper model
                 client = OpenAI()
-                transcription = await client.audio.transcriptions.create(
+                transcription = client.audio.transcriptions.create(
                     model=config.OPENAI_MODEL, file=audio_file
                 )
             logger.info(
