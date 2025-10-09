@@ -4,11 +4,11 @@ import shutil
 import tempfile
 from typing import List
 import uuid
-import ffmpeg
 
+from asset_processing_service.config import config
+from asset_processing_service.logger import logger
+import ffmpeg
 from openai import OpenAI
-from config import config
-from logger import logger
 
 
 async def split_audio_file(

@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
+
 import aiohttp
-from config import config, HEADERS
-from models import Asset, AssetProcessingJob
+from asset_processing_service.config import HEADERS, config
+from asset_processing_service.logger import logger
+from asset_processing_service.models import Asset, AssetProcessingJob
 import tiktoken
-from logger import logger
 
 
 class APIError(Exception):

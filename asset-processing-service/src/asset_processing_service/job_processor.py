@@ -1,16 +1,20 @@
 import os
-from models import AssetProcessingJob
-from config import config
+from asset_processing_service.models import AssetProcessingJob
+from asset_processing_service.config import config
 import asyncio
-from api_client import (
+from asset_processing_service.api_client import (
     fetch_asset,
     fetch_asset_file,
     update_job_heartbeat,
     update_job_details,
     update_asset_content,
 )
-from media_processor import split_audio_file, extract_audio_and_split, transcribe_chunks
-from logger import logger
+from asset_processing_service.media_processor import (
+    split_audio_file,
+    extract_audio_and_split,
+    transcribe_chunks,
+)
+from asset_processing_service.logger import logger
 
 
 async def process_job(job: AssetProcessingJob) -> None:
