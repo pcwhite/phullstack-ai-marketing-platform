@@ -4,4 +4,4 @@ export const TERMINAL_STATUS = [
   "max_size_exceeded",
 ];
 export const MAX_TOKENS_ASSETS = 100000;
-export const MAX_TOKENS_PROMPTS = 20000;
+export const MAX_TOKENS_PROMPT = 20000;
