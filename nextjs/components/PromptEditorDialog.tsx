@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { MessageSquare } from "lucide-react";
@@ -9,7 +9,7 @@ import { Textarea } from "./ui/textarea";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { Save } from "lucide-react";
-import { formatTokens } from "@/utils/token-helper";
+import { formatTokens, getPromptTokenCount } from "@/utils/token-helper";
 import { MAX_TOKENS_PROMPT } from "@/lib/constants";
 import { Prompt } from "@/server/db/schema";
 import toast from "react-hot-toast";
@@ -19,20 +19,27 @@ interface PromptEditorDialogProps {
   isOpen: boolean;
   prompt: Prompt | null;
   handleOnClose: () => void;
+  handlePromptUpdate: (prompt: Prompt) => void;
+  isSaving: boolean;
 }
 
 function PromptEditorDialog({
   isOpen,
   prompt,
   handleOnClose,
+  handlePromptUpdate,
+  isSaving,
 }: PromptEditorDialogProps) {
   const [name, setName] = useState(prompt?.name || "");
   const [content, setContent] = useState(prompt?.prompt || "");
   const [currentTokenCount, setCurrentTokenCount] = useState(
-    prompt?.tokenCount || 0
+    getPromptTokenCount(prompt?.prompt || "")
   );
   const [isExceeded, setIsExceeded] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setIsExceeded(currentTokenCount > MAX_TOKENS_PROMPT);
+  }, [currentTokenCount]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,29 +49,6 @@ function PromptEditorDialog({
     else setContent(value);
   };
 
-  //   const handleOnClose = () => {
-  //     setName("");
-  //     setContent("");
-  //     setCurrentTokenCount(0);
-  //     setIsExceeded(false);
-  //     setIsSaving(false);
-  //   };
-
-  const handleSave = async (updatedPrompt: Prompt) => {
-    setIsSaving(true);
-    try {
-      await axios.put(
-        `/api/projects/${prompt?.projectId}/prompts`,
-        updatedPrompt
-      );
-      toast.success("Prompt saved successfully");
-    } catch (error) {
-      console.error("Error saving prompt: ", error);
-      toast.error("Error saving prompt. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
   return (
     <Dialog open={isOpen} onOpenChange={handleOnClose}>
       <DialogTitle />

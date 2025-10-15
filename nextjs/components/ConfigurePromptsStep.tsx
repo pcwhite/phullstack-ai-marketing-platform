@@ -23,6 +23,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
   const [deletePromptId, setDeletePromptId] = useState<string | null>(null);
   const [isDeletingPrompt, setIsDeletingPrompt] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   console.log("deletePromptId", deletePromptId);
   const router = useRouter();
 
@@ -99,6 +100,27 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     }
   };
 
+  const handlePromptUpdate = async (updatedPrompt: Prompt) => {
+    setIsSaving(true);
+    try {
+      const response = await axios.patch(
+        `/api/projects/${projectId}/prompts`,
+        updatedPrompt
+      );
+      setPrompts((prevPrompts) =>
+        prevPrompts.map((prompt) =>
+          prompt.id === updatedPrompt.id ? response.data : prompt
+        )
+      );
+      toast.success("Prompt saved successfully");
+    } catch (error) {
+      console.error("Error saving prompt: ", error);
+      toast.error("Error saving prompt. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-x-6">
       <ConfigurePromptsStepHeader
@@ -125,6 +147,8 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
         isOpen={!!selectedPrompt}
         prompt={selectedPrompt}
         handleOnClose={() => setSelectedPrompt(null)}
+        handlePromptUpdate={handlePromptUpdate}
+        isSaving={isSaving}
       />
       {/* <TemplateSelectionPopup /> */}
     </div>
