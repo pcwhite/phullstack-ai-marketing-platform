@@ -1,5 +1,6 @@
 import { db } from "@/server/db";
 import { promptsTable } from "@/server/db/schema";
+import { getPromptTokenCount } from "@/utils/token-helper";
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,6 +11,10 @@ const newPromptSchema = z.object({
   prompt: z.string().default(""),
   tokenCount: z.number().min(0).default(0),
   order: z.number().min(0).default(0),
+});
+
+const updatePromptSchema = newPromptSchema.extend({
+  id: z.uuid().min(1),
 });
 
 export async function POST(
@@ -125,4 +130,42 @@ export async function DELETE(
       { status: 500 }
     );
   }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { projectId: string } }
+) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { projectId } = params;
+  const json = await request.json();
+
+  const parsedPrompt = updatePromptSchema.safeParse(json);
+
+  if (!parsedPrompt.success) {
+    return NextResponse.json(
+      { error: parsedPrompt.error.issues },
+      { status: 400 }
+    );
+  }
+
+  const { id, name, prompt: promptText, order } = parsedPrompt.data;
+
+  const tokenCount = getPromptTokenCount(promptText);
+
+  const updatedPrompt = await db
+    .update(promptsTable)
+    .set({ name, prompt: promptText, tokenCount, order })
+    .where(and(eq(promptsTable.id, id), eq(promptsTable.projectId, projectId)))
+    .returning();
+
+  if (updatedPrompt.length === 0) {
+    return NextResponse.json({ error: "Prompt not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(updatedPrompt[0]);
 }

@@ -3,39 +3,45 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Loader2, Save } from "lucide-react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import { Save } from "lucide-react";
 import { formatTokens, getPromptTokenCount } from "@/utils/token-helper";
 import { MAX_TOKENS_PROMPT } from "@/lib/constants";
 import { Prompt } from "@/server/db/schema";
-import toast from "react-hot-toast";
-import axios from "axios";
 
 interface PromptEditorDialogProps {
   isOpen: boolean;
   prompt: Prompt | null;
   handleOnClose: () => void;
-  handlePromptUpdate: (prompt: Prompt) => void;
   isSaving: boolean;
+  handleSave: (prompt: Prompt) => void;
 }
 
 function PromptEditorDialog({
   isOpen,
   prompt,
   handleOnClose,
-  handlePromptUpdate,
+  handleSave,
   isSaving,
 }: PromptEditorDialogProps) {
-  const [name, setName] = useState(prompt?.name || "");
-  const [content, setContent] = useState(prompt?.prompt || "");
-  const [currentTokenCount, setCurrentTokenCount] = useState(
-    getPromptTokenCount(prompt?.prompt || "")
-  );
+  const [name, setName] = useState("");
+  const [content, setContent] = useState("");
+  const [currentTokenCount, setCurrentTokenCount] = useState(0);
   const [isExceeded, setIsExceeded] = useState(false);
+
+  useEffect(() => {
+    if (prompt) {
+      setName(prompt.name);
+      setContent(prompt.prompt || "");
+      setCurrentTokenCount(getPromptTokenCount(prompt.prompt || ""));
+    } else {
+      setName("");
+      setContent("");
+      setCurrentTokenCount(0);
+    }
+  }, [prompt]);
 
   useEffect(() => {
     setIsExceeded(currentTokenCount > MAX_TOKENS_PROMPT);
@@ -44,9 +50,13 @@ function PromptEditorDialog({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    if (name === "name") setName(value);
-    else setContent(value);
+    const { name: fieldName, value } = e.target;
+    if (fieldName === "name") {
+      setName(value);
+    } else {
+      setContent(value);
+      setCurrentTokenCount(getPromptTokenCount(value));
+    }
   };
 
   return (

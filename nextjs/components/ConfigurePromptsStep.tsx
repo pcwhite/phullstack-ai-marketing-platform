@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import ConfigurePromptsStepHeader from "./ConfigurePromptsStepHeader";
-// import ConfirmationModal from "./ConfirmationModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { Prompt } from "@/server/db/schema";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import PromptList from "./PromptList";
 import ConfirmationModal from "./ConfirmationModal";
 import PromptEditorDialog from "./PromptEditorDialog";
@@ -18,6 +17,7 @@ interface ConfigurePomptsStepProps {
 function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreatingPrompt, setIsCreatingPrompt] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isImportingTemplate, setIsImportingTemplate] = useState(false);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [deletePromptId, setDeletePromptId] = useState<string | null>(null);
@@ -67,7 +67,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
           name: "New Prompt",
           prompt: "",
           tokenCount: 0,
-          order: prompts.length + 1,
+          order: prompts.length,
         }
       );
 
@@ -100,25 +100,31 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     }
   };
 
-  const handlePromptUpdate = async (updatedPrompt: Prompt) => {
+  const handlePromptUpdate = async (prompt: Prompt) => {
     setIsSaving(true);
     try {
       const response = await axios.patch(
         `/api/projects/${projectId}/prompts`,
-        updatedPrompt
+        prompt
       );
       setPrompts((prevPrompts) =>
         prevPrompts.map((prompt) =>
-          prompt.id === updatedPrompt.id ? response.data : prompt
+          prompt.id === prompt.id ? response.data : prompt
         )
       );
       toast.success("Prompt saved successfully");
+      handleOnClose();
     } catch (error) {
       console.error("Error saving prompt: ", error);
       toast.error("Error saving prompt. Please try again.");
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleOnClose = () => {
+    setSelectedPrompt(null);
+    router.push(`?tab=prompts`);
   };
 
   return (
@@ -146,8 +152,8 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
       <PromptEditorDialog
         isOpen={!!selectedPrompt}
         prompt={selectedPrompt}
-        handleOnClose={() => setSelectedPrompt(null)}
-        handlePromptUpdate={handlePromptUpdate}
+        handleOnClose={handleOnClose}
+        handleSave={handlePromptUpdate}
         isSaving={isSaving}
       />
       {/* <TemplateSelectionPopup /> */}
