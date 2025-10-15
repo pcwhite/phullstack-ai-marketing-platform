@@ -49,6 +49,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
         setPrompts(response.data);
       } catch (error) {
         console.error("Error fetching prompts: ", error);
+        toast.error("Failed to fetch prompts. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -108,15 +109,13 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
         prompt
       );
       setPrompts((prevPrompts) =>
-        prevPrompts.map((prompt) =>
-          prompt.id === prompt.id ? response.data : prompt
-        )
+        prevPrompts.map((p) => (p.id === prompt.id ? response.data : p))
       );
-      toast.success("Prompt saved successfully");
+      toast.success("Prompt updated successfully");
       handleOnClose();
     } catch (error) {
-      console.error("Error saving prompt: ", error);
-      toast.error("Error saving prompt. Please try again.");
+      console.error("Error updating prompt: ", error);
+      toast.error("Error updating prompt. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -156,6 +155,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
         handleSave={handlePromptUpdate}
         isSaving={isSaving}
       />
+      {/** TODO:  This is where the user can edit and save changes to a prompt */}
       {/* <TemplateSelectionPopup /> */}
     </div>
   );

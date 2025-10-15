@@ -14,7 +14,7 @@ const newPromptSchema = z.object({
 });
 
 const updatePromptSchema = newPromptSchema.extend({
-  id: z.uuid().min(1),
+  id: z.string().uuid(),
 });
 
 export async function POST(
@@ -147,10 +147,7 @@ export async function PATCH(
   const parsedPrompt = updatePromptSchema.safeParse(json);
 
   if (!parsedPrompt.success) {
-    return NextResponse.json(
-      { error: parsedPrompt.error.issues },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: parsedPrompt.error }, { status: 400 });
   }
 
   const { id, name, prompt: promptText, order } = parsedPrompt.data;
