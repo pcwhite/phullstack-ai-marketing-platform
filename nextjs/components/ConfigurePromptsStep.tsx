@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import ConfigurePromptsStepHeader from "./ConfigurePromptsStepHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import { Prompt } from "@/server/db/schema";
 import toast from "react-hot-toast";
 import PromptList from "./PromptList";
 import ConfirmationModal from "./ConfirmationModal";
 import PromptEditorDialog from "./PromptEditorDialog";
+import { CommonPrompt } from "@/interfaces/CommonPrompt";
+import TemplateSelectionPopup from "./TemplateSelectionPopup";
 
 interface ConfigurePomptsStepProps {
   projectId: string;
@@ -17,14 +18,16 @@ interface ConfigurePomptsStepProps {
 function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreatingPrompt, setIsCreatingPrompt] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isImportingTemplate, setIsImportingTemplate] = useState(false);
-  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [prompts, setPrompts] = useState<CommonPrompt[]>([]);
   const [deletePromptId, setDeletePromptId] = useState<string | null>(null);
   const [isDeletingPrompt, setIsDeletingPrompt] = useState(false);
-  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<CommonPrompt | null>(
+    null
+  );
   const [isSaving, setIsSaving] = useState(false);
-  console.log("deletePromptId", deletePromptId);
+  const [isTemplatePopupOpen, setIsTemplatePopupOpen] = useState(false);
+
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -43,7 +46,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     const fetchPrompts = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get<Prompt[]>(
+        const response = await axios.get<CommonPrompt[]>(
           `/api/projects/${projectId}/prompts`
         );
         setPrompts(response.data);
@@ -62,7 +65,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     setIsCreatingPrompt(true);
 
     try {
-      const response = await axios.post<Prompt>(
+      const response = await axios.post<CommonPrompt>(
         `/api/projects/${projectId}/prompts`,
         {
           name: "New Prompt",
@@ -101,7 +104,7 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     }
   };
 
-  const handlePromptUpdate = async (prompt: Prompt) => {
+  const handlePromptUpdate = async (prompt: CommonPrompt) => {
     setIsSaving(true);
     try {
       const response = await axios.patch(
@@ -126,12 +129,33 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
     router.push(`?tab=prompts`);
   };
 
+  const handleTemplateSelect = async (templateId: string) => {
+    setIsImportingTemplate(true);
+    try {
+      const response = await axios.post<CommonPrompt[]>(
+        `/api/projects/${projectId}/import-template`,
+        {
+          templateId,
+        }
+      );
+      setPrompts((prev) => [...prev, ...response.data]);
+      toast.success("Template imported successfully");
+    } catch (error) {
+      console.error("Error importing template: ", error);
+      toast.error("Error importing template. Please try again.");
+    } finally {
+      setIsImportingTemplate(false);
+      setIsTemplatePopupOpen(false);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-x-6">
       <ConfigurePromptsStepHeader
         handlePromptCreate={handlePromptCreate}
         isCreatingPrompt={isCreatingPrompt}
         isImportingTemplate={isImportingTemplate}
+        setIsTemplatePopupOpen={setIsTemplatePopupOpen}
       />
       <PromptList
         prompts={prompts}
@@ -153,10 +177,14 @@ function ConfigurePomptsStep({ projectId }: ConfigurePomptsStepProps) {
         prompt={selectedPrompt}
         handleOnClose={handleOnClose}
         handleSave={handlePromptUpdate}
-        isSaving={isSaving}
+        isSaving={isSaving as boolean}
       />
       {/** TODO:  This is where the user can edit and save changes to a prompt */}
-      {/* <TemplateSelectionPopup /> */}
+      <TemplateSelectionPopup
+        isOpen={isTemplatePopupOpen}
+        onClose={() => setIsTemplatePopupOpen(false)}
+        onTemplateSelect={handleTemplateSelect}
+      />
     </div>
   );
 }

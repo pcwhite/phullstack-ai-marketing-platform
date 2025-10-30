@@ -9,14 +9,14 @@ import { Textarea } from "./ui/textarea";
 import { cn } from "@/lib/utils";
 import { formatTokens, getPromptTokenCount } from "@/utils/token-helper";
 import { MAX_TOKENS_PROMPT } from "@/lib/constants";
-import { Prompt } from "@/server/db/schema";
+import { CommonPrompt } from "@/interfaces/CommonPrompt";
 
 interface PromptEditorDialogProps {
   isOpen: boolean;
-  prompt: Prompt | null;
+  prompt: CommonPrompt | null;
   handleOnClose: () => void;
   isSaving: boolean;
-  handleSave: (prompt: Prompt) => void;
+  handleSave: (prompt: CommonPrompt) => void;
 }
 
 function PromptEditorDialog({

@@ -1,19 +1,22 @@
-import { notFound } from 'next/navigation';
-import React from 'react'
+import { notFound } from "next/navigation";
+import React from "react";
+import { getTemplate } from "@/server/queries";
+import TemplateDetailView from "@/components/TemplateDetailView";
 
-interface TemplatePageProps {
-  params: {
-    templateId: string
-  }
-}
+export default async function TemplatePage({
+  params,
+}: {
+  params: { templateId: string };
+}) {
+  const template = await getTemplate(params.templateId);
 
-export default function TemplatePage({ params }: TemplatePageProps) {
-  
-  if (params.templateId != "123") {
+  if (!template) {
     return notFound();
   }
-  
-    return (
-    <div>Template {params.templateId}</div>
-  )
+
+  return (
+    <div className="p-2 sm:p-4 md:p-6 lg:p-8 mt-2">
+      <TemplateDetailView template={template} />
+    </div>
+  );
 }
