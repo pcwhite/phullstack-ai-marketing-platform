@@ -99,11 +99,11 @@ function GenerateContentStep({ projectId }: GenerateContentStepProps) {
     let newErrorMessage = null;
     if (!projectHasContent && !projectHasPrompts) {
       const missingItems = [];
-      if (!projectHasContent) {
-        missingItems.push("valid assets");
-      }
       if (!projectHasPrompts) {
         missingItems.push("add prompts");
+      }
+      if (!projectHasContent) {
+        missingItems.push("valid assets");
       }
       newErrorMessage = `Please ${missingItems.join(
         " and "
