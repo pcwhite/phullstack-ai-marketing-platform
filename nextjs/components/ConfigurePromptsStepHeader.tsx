@@ -20,7 +20,7 @@ function ConfigurePromptsStepHeader({
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start">
       <h2 className="text-xl md:text-2xl lg:text-2xl mb-4 sm:mb-0 font-bold">
-        Step 3: Prompts
+        Step 2: Prompts
       </h2>
       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
         <Button

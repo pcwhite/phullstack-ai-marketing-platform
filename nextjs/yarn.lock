@@ -5,6 +5,53 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@ai-sdk/gateway@npm:2.0.5":
+  version: 2.0.5
+  resolution: "@ai-sdk/gateway@npm:2.0.5"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.15
+    "@vercel/oidc": 3.0.3
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 203d7fa4ad6419568a0b2e7f249042884cf0223696561604c28f6d3af3b8a37d6b5de3b7e7406cee06aaaa5c24a025395ec9bf09f6d8262fdf8fa842e2c799d6
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/openai@npm:^2.0.59":
+  version: 2.0.59
+  resolution: "@ai-sdk/openai@npm:2.0.59"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.15
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: eefcb8b1df34903dfff3f94b2761f4076cfb23ad2e5786762b4cdb7167457ebe13797a2de6b7365b7f75b355cbce2e7be7acf5e59cd040099cf3817697a1a51a
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider-utils@npm:3.0.15":
+  version: 3.0.15
+  resolution: "@ai-sdk/provider-utils@npm:3.0.15"
+  dependencies:
+    "@ai-sdk/provider": 2.0.0
+    "@standard-schema/spec": ^1.0.0
+    eventsource-parser: ^3.0.6
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: 6e308766964198d4661d214da4d8d8bea421598d16e0f1d6fa84776203f4ab7b40063f7509b63c9a421f6b80284d6e2e05372ccb6b7e805806baa34ad26c3051
+  languageName: node
+  linkType: hard
+
+"@ai-sdk/provider@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@ai-sdk/provider@npm:2.0.0"
+  dependencies:
+    json-schema: ^0.4.0
+  checksum: 6068b327d48d37a5cb994652c29af4206f228c1fd1e5ab38f2db860b5b6ec3e1e7c75a2fab98e633fec59dc7f0ac6f115ce68aad66175264b263509928c67b91
+  languageName: node
+  linkType: hard
+
 "@alloc/quick-lru@npm:^5.2.0":
   version: 5.2.0
   resolution: "@alloc/quick-lru@npm:5.2.0"
@@ -887,6 +934,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opentelemetry/api@npm:1.9.0":
+  version: 1.9.0
+  resolution: "@opentelemetry/api@npm:1.9.0"
+  checksum: 9e88e59d53ced668f3daaecfd721071c5b85a67dd386f1c6f051d1be54375d850016c881f656ffbe9a03bedae85f7e89c2f2b635313f9c9b195ad033cdc31020
+  languageName: node
+  linkType: hard
+
 "@oxc-project/runtime@npm:=0.82.3":
   version: 0.82.3
   resolution: "@oxc-project/runtime@npm:0.82.3"
@@ -1593,6 +1647,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@standard-schema/spec@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@standard-schema/spec@npm:1.0.0"
+  checksum: 2d7d73a1c9706622750ab06fc40ef7c1d320b52d5e795f8a1c7a77d0d6a9f978705092bc4149327b3cff4c9a14e5b3800d3b00dc945489175a2d3031ded8332a
+  languageName: node
+  linkType: hard
+
 "@swc/counter@npm:^0.1.3":
   version: 0.1.3
   resolution: "@swc/counter@npm:0.1.3"
@@ -2238,6 +2299,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/oidc@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@vercel/oidc@npm:3.0.3"
+  checksum: 0233e480e6eebfe23ab8a077e04b8c3dccd9870e59ffd76ad089580b8a4b5fd10e5952c36aeb01bce5ad1188be30a53637aebc4f93dc5a7b5ba80055e70b1439
+  languageName: node
+  linkType: hard
+
 "@vercel/postgres@npm:^0.10.0":
   version: 0.10.0
   resolution: "@vercel/postgres@npm:0.10.0"
@@ -2359,6 +2427,20 @@ __metadata:
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
   checksum: 86a7f542af277cfbd77dd61e7df8422f90bac512953709003a1c530171a9d019d072e2400eab2b59f84b49ab9dd237be44315ca663ac73e82b3922d10ea5eafa
+  languageName: node
+  linkType: hard
+
+"ai@npm:^5.0.86":
+  version: 5.0.86
+  resolution: "ai@npm:5.0.86"
+  dependencies:
+    "@ai-sdk/gateway": 2.0.5
+    "@ai-sdk/provider": 2.0.0
+    "@ai-sdk/provider-utils": 3.0.15
+    "@opentelemetry/api": 1.9.0
+  peerDependencies:
+    zod: ^3.25.76 || ^4.1.8
+  checksum: d7eae825ccd23a741d7d32c70493407f152464946282cca788f73e129f162bc84ec52fb65735b2e8d220b9a8738afc797d9c3a45b0cdf62e9e13d96363adab6f
   languageName: node
   linkType: hard
 
@@ -4260,6 +4342,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventsource-parser@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "eventsource-parser@npm:3.0.6"
+  checksum: b90ec27f8d992afa7df171db202faaedb1782214f64e50690cbf78bc2629f7751575aa27a72d8ae447e5a7094938406b1a3ea1d89e5f0f2d6916cc8a694b6587
+  languageName: node
+  linkType: hard
+
 "exponential-backoff@npm:^3.1.1":
   version: 3.1.2
   resolution: "exponential-backoff@npm:3.1.2"
@@ -5322,6 +5411,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-schema@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "json-schema@npm:0.4.0"
+  checksum: 66389434c3469e698da0df2e7ac5a3281bcff75e797a5c127db7c5b56270e01ae13d9afa3c03344f76e32e81678337a8c912bdbb75101c62e487dc3778461d72
+  languageName: node
+  linkType: hard
+
 "json-stable-stringify-without-jsonify@npm:^1.0.1":
   version: 1.0.1
   resolution: "json-stable-stringify-without-jsonify@npm:1.0.1"
@@ -5805,6 +5901,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nextjs@workspace:."
   dependencies:
+    "@ai-sdk/openai": ^2.0.59
     "@clerk/nextjs": ^6.33.0
     "@radix-ui/react-alert-dialog": ^1.1.15
     "@radix-ui/react-dialog": ^1.1.15
@@ -5816,6 +5913,7 @@ __metadata:
     "@types/react-dom": ^18
     "@vercel/blob": ^2.0.0
     "@vercel/postgres": ^0.10.0
+    ai: ^5.0.86
     axios: ^1.12.2
     class-variance-authority: ^0.7.1
     clsx: ^2.1.1

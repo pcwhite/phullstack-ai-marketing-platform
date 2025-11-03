@@ -18,7 +18,7 @@ function GenerateContentStep({ projectId }: GenerateContentStepProps) {
   const [isAssetTokensExceeded, setIsAssetTokensExceeded] = useState(false);
   const [isPromptsTokenExceeded, setIsPromptsTokenExceeded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isGenerating] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [generatedCount, setGeneratedCount] = useState(0);
   const [totalPrompts, setTotalPrompts] = useState(0);
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>(
@@ -131,11 +131,65 @@ function GenerateContentStep({ projectId }: GenerateContentStepProps) {
     isPromptsTokenExceeded,
   ]);
 
+  useEffect(() => {
+    let pollingInterval: NodeJS.Timeout;
+
+    const fetchGeneratedContent = async () => {
+      try {
+        const response = await axios.get<GeneratedContent[]>(
+          `/api/projects/${projectId}/generated-content`
+        );
+        setGeneratedContent(response.data);
+        setGeneratedCount(response.data.length);
+
+        if (response.data.length === totalPrompts) {
+          setIsGenerating(false);
+          clearInterval(pollingInterval);
+          toast.success(
+            `Generation completed successfully. ${response.data.length} content generated.`
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching generated content", error);
+        toast.error("Error fetching generated content. Please try again.");
+      }
+    };
+
+    if (isGenerating) {
+      pollingInterval = setInterval(async () => {
+        fetchGeneratedContent();
+      }, 1000);
+    }
+    return () => {
+      clearInterval(pollingInterval);
+    };
+  }, [isGenerating, totalPrompts, projectId]);
+
+  const startGeneration = async () => {
+    setGeneratedContent([]);
+    setGeneratedCount(0);
+    try {
+      await axios.delete(`/api/projects/${projectId}/generated-content`);
+      setIsGenerating(true);
+
+      const response = await axios.post<GeneratedContent[]>(
+        `/api/projects/${projectId}/generated-content`
+      );
+      toast.success(
+        `Generation started successfully. ${response.data.length} content generated.`
+      );
+    } catch (error) {
+      console.error("Error starting generation", error);
+      toast.error("Error starting generation. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
   return (
     <div>
       <GenerateStepHeader
         canGenerateContent={canGenerate}
-        startGeneration={() => {}}
+        startGeneration={startGeneration}
       />
       <GenerateStepBody
         isLoading={isLoading}
