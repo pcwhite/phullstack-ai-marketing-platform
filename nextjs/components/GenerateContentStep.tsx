@@ -17,7 +17,7 @@ function GenerateContentStep({ projectId }: GenerateContentStepProps) {
   const [projectHasPrompts, setProjectHasPrompts] = useState(false);
   const [isAssetTokensExceeded, setIsAssetTokensExceeded] = useState(false);
   const [isPromptsTokenExceeded, setIsPromptsTokenExceeded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedCount, setGeneratedCount] = useState(0);
   const [totalPrompts, setTotalPrompts] = useState(0);
@@ -198,6 +198,8 @@ function GenerateContentStep({ projectId }: GenerateContentStepProps) {
         totalPrompts={totalPrompts}
         errorMessage={errorMessage}
         generatedContent={generatedContent}
+        projectId={projectId}
+        setGeneratedContent={setGeneratedContent}
       />
     </div>
   );

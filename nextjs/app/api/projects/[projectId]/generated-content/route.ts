@@ -4,6 +4,7 @@ import { generatedContentTable, projectsTable } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
+import z from "zod";
 
 export const maxDuration = 60; // seconds
 
@@ -164,6 +165,43 @@ export async function DELETE(
     console.error("Error deleting generated content", error);
     return NextResponse.json(
       { error: "Failed to delete generated content" },
+      { status: 500 }
+    );
+  }
+}
+
+const updateGeneratedContentSchema = z.object({
+  id: z.string().uuid(),
+  result: z.string().min(1, "Result is required"),
+});
+
+export async function PATCH(request: NextRequest) {
+  const body = await request.json();
+  const parsedResults = updateGeneratedContentSchema.safeParse(body);
+  if (!parsedResults.success) {
+    return NextResponse.json(
+      { error: parsedResults.error.issues },
+      { status: 400 }
+    );
+  }
+  try {
+    const { id, result } = parsedResults.data;
+    const updatedContent = await db
+      .update(generatedContentTable)
+      .set({ result })
+      .where(eq(generatedContentTable.id, id))
+      .returning();
+    if (updatedContent.length === 0) {
+      return NextResponse.json(
+        { error: "Generated content not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(updatedContent[0]);
+  } catch (error) {
+    console.error("Error updating generated content", error);
+    return NextResponse.json(
+      { error: "Failed to update generated content" },
       { status: 500 }
     );
   }
