@@ -3309,9 +3309,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"drizzle-kit@npm:^0.31.5":
-  version: 0.31.5
-  resolution: "drizzle-kit@npm:0.31.5"
+"drizzle-kit@npm:^0.31.6":
+  version: 0.31.6
+  resolution: "drizzle-kit@npm:0.31.6"
   dependencies:
     "@drizzle-team/brocli": ^0.10.2
     "@esbuild-kit/esm-loader": ^2.5.5
@@ -3319,7 +3319,7 @@ __metadata:
     esbuild-register: ^3.5.0
   bin:
     drizzle-kit: bin.cjs
-  checksum: eeba3a18306237bfbb7dd61650191a1ff8082f3816febc1de91c85d8be7f52aeaf7ebc4eecff402746b244888110bb5aa8e332fc7b4c6ec99e0feff05bd160bd
+  checksum: f914e08bedf87fe99a6c560559a7ae49cf40c012466ed1f80811faf2e292f0fd161f09e220009e008d2870ac072aa46b9d624b82f8494a06b8d653407127e140
   languageName: node
   linkType: hard
 
@@ -5918,7 +5918,7 @@ __metadata:
     class-variance-authority: ^0.7.1
     clsx: ^2.1.1
     dotenv: ^17.2.2
-    drizzle-kit: ^0.31.5
+    drizzle-kit: ^0.31.6
     drizzle-orm: ^0.44.5
     eslint: ^8
     eslint-config-next: 14.2.33
@@ -5929,6 +5929,7 @@ __metadata:
     react: ^18
     react-dom: ^18
     react-hot-toast: ^2.6.0
+    stripe: ^19.2.0
     tailwind-merge: ^3.3.1
     tailwindcss: ^3.4.1
     tailwindcss-animate: ^1.0.7
@@ -6591,6 +6592,15 @@ __metadata:
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: bb0a0ceedca4c3c57a9b981b90601579058903c62be23c5e8e843d2c2d4148a3ecf029d5133486fb0e1822b098ba8bba09e89d6b21742d02fa26bda6441a6fb2
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.11.0":
+  version: 6.14.0
+  resolution: "qs@npm:6.14.0"
+  dependencies:
+    side-channel: ^1.1.0
+  checksum: 189b52ad4e9a0da1a16aff4c58b2a554a8dad9bd7e287c7da7446059b49ca2e33a49e570480e8be406b87fccebf134f51c373cbce36c8c83859efa0c9b71d635
   languageName: node
   linkType: hard
 
@@ -7413,6 +7423,20 @@ __metadata:
   version: 3.1.1
   resolution: "strip-json-comments@npm:3.1.1"
   checksum: 492f73e27268f9b1c122733f28ecb0e7e8d8a531a6662efbd08e22cccb3f9475e90a1b82cab06a392f6afae6d2de636f977e231296400d0ec5304ba70f166443
+  languageName: node
+  linkType: hard
+
+"stripe@npm:^19.2.0":
+  version: 19.2.0
+  resolution: "stripe@npm:19.2.0"
+  dependencies:
+    qs: ^6.11.0
+  peerDependencies:
+    "@types/node": ">=16"
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+  checksum: c4e62f4de8951ea2733b94478acd683d4d71824e84746e85e1286d3f1ba96ed77350c2f4f4e15a77fa4d239a6c2801c9fe3917e265c8f13f542ea22525101e6b
   languageName: node
   linkType: hard
 

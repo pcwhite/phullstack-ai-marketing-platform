@@ -2,7 +2,12 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 // TODO: Add public and private routes
-const isPublicRoute = createRouteMatcher(["/", "/pricing", "/api/upload"]);
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/pricing",
+  "/api/upload",
+  "/api/webhooks/stripe",
+]);
 
 const isSecureRoute = createRouteMatcher([
   "/api/asset-processing-job",
