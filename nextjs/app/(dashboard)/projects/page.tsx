@@ -1,18 +1,21 @@
 import { createProject } from "@/server/mutations";
-import { getProjectsForUser } from "@/server/queries";
+import { getProjectsForUser, getUserSubscription } from "@/server/queries";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import React from "react";
 import ProjectList from "@/components/ProjectList";
+import SubscriptionMessage from "@/components/SubscriptionMessage";
 
 export default async function ProjectsPage() {
   const projects = await getProjectsForUser();
+  const subscription = await getUserSubscription();
+
+  const isSubscribed =
+    subscription && subscription.status === "active" ? true : false;
 
   return (
     <div className="w-full">
-      {/* TODO: Create projects list header with create action */}
-      {/* TODO: Grid of cards to view each project and navigate to detail view */}
-
+      {!isSubscribed && <SubscriptionMessage />}
       <div className="max-w-screen-2xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12 mt-2 space-y-6 sm:space-y-8 lg:space-y-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
           <div className="space-y-2 sm:space-y-4 mb-4 sm:mb-0">
