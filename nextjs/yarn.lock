@@ -976,6 +976,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-accordion@npm:^1.2.12":
+  version: 1.2.12
+  resolution: "@radix-ui/react-accordion@npm:1.2.12"
+  dependencies:
+    "@radix-ui/primitive": 1.1.3
+    "@radix-ui/react-collapsible": 1.1.12
+    "@radix-ui/react-collection": 1.1.7
+    "@radix-ui/react-compose-refs": 1.1.2
+    "@radix-ui/react-context": 1.1.2
+    "@radix-ui/react-direction": 1.1.1
+    "@radix-ui/react-id": 1.1.1
+    "@radix-ui/react-primitive": 2.1.3
+    "@radix-ui/react-use-controllable-state": 1.2.2
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 4acc2ccbb907cde2e9a9da0aca27c006b6880fe20204b662e8be76a0f69d9c99b31c4b57d7e6da4380591cad41cffea5e4b206bd8fefe9e9e42bb0fc0154a471
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-alert-dialog@npm:^1.1.15":
   version: 1.1.15
   resolution: "@radix-ui/react-alert-dialog@npm:1.1.15"
@@ -1016,6 +1043,32 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 6cdf74f06090f8994cdf6d3935a44ea3ac309163a4f59c476482c4907e8e0775f224045030abf10fa4f9e1cb7743db034429249b9e59354988e247eeb0f4fdcf
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-collapsible@npm:1.1.12":
+  version: 1.1.12
+  resolution: "@radix-ui/react-collapsible@npm:1.1.12"
+  dependencies:
+    "@radix-ui/primitive": 1.1.3
+    "@radix-ui/react-compose-refs": 1.1.2
+    "@radix-ui/react-context": 1.1.2
+    "@radix-ui/react-id": 1.1.1
+    "@radix-ui/react-presence": 1.1.5
+    "@radix-ui/react-primitive": 2.1.3
+    "@radix-ui/react-use-controllable-state": 1.2.2
+    "@radix-ui/react-use-layout-effect": 1.1.1
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 31e01f7a628882b621843004863bf57c705e22de25ab41b74032a2ae2228f45251955d430f7c139a0c53fb3a19247b9d38b49b8c05b6da9dacc5524b28d29c23
   languageName: node
   linkType: hard
 
@@ -5903,6 +5956,7 @@ __metadata:
   dependencies:
     "@ai-sdk/openai": ^2.0.59
     "@clerk/nextjs": ^6.33.0
+    "@radix-ui/react-accordion": ^1.2.12
     "@radix-ui/react-alert-dialog": ^1.1.15
     "@radix-ui/react-dialog": ^1.1.15
     "@radix-ui/react-select": ^2.2.6
@@ -5929,6 +5983,7 @@ __metadata:
     react: ^18
     react-dom: ^18
     react-hot-toast: ^2.6.0
+    react-icons: ^5.5.0
     stripe: ^19.2.0
     tailwind-merge: ^3.3.1
     tailwindcss: ^3.4.1
@@ -6645,6 +6700,15 @@ __metadata:
     react: ">=16"
     react-dom: ">=16"
   checksum: 244a587bc182f62fc1d9e119120da522395494ad1bdd3cf1365bf6be05dc23c9cd3b6749ae58d77a2e329f530649f05b87fe9cb43fa87eebf32ce90e393b9794
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-icons@npm:5.5.0"
+  peerDependencies:
+    react: "*"
+  checksum: cbd74f4b7982e6e18d59798a6b578268c8eb0909d78d87bcf9b25f99b3e544fd189a76551cb5e770d17f154a60b668551aee108aaf8471309b23f7af3b2c5b07
   languageName: node
   linkType: hard
 
